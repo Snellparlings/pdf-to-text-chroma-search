@@ -16,7 +16,7 @@ git clone https://github.com/your-username/pdf-to-text-chroma-search.git
 ```
 2. Install the required dependencies:
 ```
-pip install PyPDF2 chromadb langchain
+pip install PyPDF2 chromadb langchain rich
 ```
 
 ## Usage

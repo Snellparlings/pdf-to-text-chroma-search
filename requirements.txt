@@ -1,0 +1,4 @@
+chromadb
+langchain==0.1.0
+PyPDF2
+rich
