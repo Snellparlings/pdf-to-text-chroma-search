@@ -10,3 +10,4 @@ torchaudio
 transformers
 tqdm
 pdfminer-six
+pydantic==2.7.1
