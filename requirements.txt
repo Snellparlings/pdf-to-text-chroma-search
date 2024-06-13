@@ -2,3 +2,11 @@ chromadb
 langchain==0.1.0
 PyPDF2
 rich
+langchain-community
+sentence-transformers
+transformers
+torch
+torchaudio
+transformers
+tqdm
+pdfminer-six
