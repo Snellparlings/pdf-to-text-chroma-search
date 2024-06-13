@@ -23,16 +23,17 @@ def pdf_to_text(file_path):
     return text
 
 # Initialize text splitter and embeddings
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=700, chunk_overlap=120)
-embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-large-en-v1.5")
-
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=2900, chunk_overlap=160)
+embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-m3")
+# embeddings = HuggingFaceEmbeddings(model_name="mixedbread-ai/mxbai-embed-large-v1")
 # Ensure embeddings are on the GPU
 # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # console.print(f"Using device: {device}", style="bold blue")
 # Use DataParallel to utilize multiple GPUs
 
 # Load the model and tokenizer from Hugging Face Transformers
-model_name = "BAAI/bge-large-en-v1.5"
+model_name = "BAAI/bge-m3"
+# model_name="mixedbread-ai/mxbai-embed-large-v1"
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModel.from_pretrained(model_name)
 
@@ -43,17 +44,17 @@ model = model.to('cuda')
 
 # Function to compute embeddings
 def embed_text(text):
-    inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=512)
+    inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=1024)
     inputs = {k: v.to('cuda') for k, v in inputs.items()}
     with torch.no_grad():
         outputs = model(**inputs)
     return outputs.last_hidden_state.mean(dim=1).cpu().numpy().tolist()
 
 # Initialize ChromaDB client
-client = chromadb.PersistentClient(path="./db2")
+client = chromadb.PersistentClient(path="./dba2")
 
 # Create or get the collection
-collection_name = "my_collectionfull2"
+collection_name = "my_collection"
 
 if collection_name in client.list_collections():
     collection = client.get_collection(name=collection_name)
@@ -62,7 +63,7 @@ else:
 
 # Process each PDF in the ./input directory
 input_directory = './input'
-batch_size = 10  # Adjust based on your GPU memory
+batch_size = 60  # Adjust based on your GPU memory
 for filename in os.listdir(input_directory):
     if filename.endswith('.pdf'):
         file_path = os.path.join(input_directory, filename)
